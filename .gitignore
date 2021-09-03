@@ -27,6 +27,17 @@
 *.lib
 
 # Executables
-*.exe
-*.out
-*.app
+bin/*
+
+# External dependencies
+_deps/*
+
+# CMake
+CMakeFiles/*
+*/CMakeFiles/*
+CMakeCache.txt
+*.cmake
+Makefile
+
+# Code
+.vscode
