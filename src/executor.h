@@ -11,10 +11,14 @@
  */
 class Executor final
 {
+public:
+
+    /**
+     * Defines ExceptionHandler function type used in the constructor
+     */
     typedef std::function<void(const Executor&,
                 std::function<void()>, const std::exception&)> ExceptionHandler;
 
-public:
     /**
      * @brief Creates an executor with N threads.
      *
@@ -27,7 +31,7 @@ public:
     explicit Executor(int thread_count = 0);
 
     /**
-     * @brief Creates an executor with N threads and exeption handler.
+     * @brief Creates an executor with N threads and custom exception handler.
      *
      * @param tread_count Desired number of threads. If it is 0 or not provided,
      * std::hardware_concurrency() value will be taken as the number of threads.
@@ -74,7 +78,7 @@ public:
     int get_thead_count() { return workers.size(); }
 
     /**
-     * @brief  Gets number of tasks that are enqueued, and wait for execution.
+     * @brief  Gets number of enqueued tasks.
      * @return Queue length.
      */
     int get_queue_length()
