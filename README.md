@@ -5,7 +5,7 @@ Task executor provides an ability to run tasks on an allocated thread pool.
 ## Build
 
 To clone and build the project, run the following:
-> **_NOTE:_** Tested on 'Ubuntu 20.04.1 LTS'
+> **_NOTE:_** Tested on 'Ubuntu 20.04 LTS'
 > 
 >  Requires CMake 3.14 or newer
 
