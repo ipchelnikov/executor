@@ -17,24 +17,20 @@ class Executor final
 public:
     /**
      * @brief Creates an executor with N threads.
-     *
      * @param tread_count Desired number of threads. If it is 0 or not provided,
      * std::hardware_concurrency() value will be taken as the number of threads.
-     * 
-     * It might throw an error if hardware_concurrency() is 0, or
+     * @throw It might throw an exception if hardware_concurrency() is 0, or
      * system error occurred while creating a threads.
      */
     explicit Executor(int thread_count = 0);
 
     /**
      * @brief Creates an executor with N threads and exeption handler.
-     *
      * @param tread_count Desired number of threads. If it is 0 or not provided,
      * std::hardware_concurrency() value will be taken as the number of threads.
      * @param handler The handler is triggered if an exception is occurred while
      * task is processing.
-     *
-     * It might throw an error if hardware_concurrency() is 0, or
+     * @throw It might throw an error if hardware_concurrency() is 0, or
      * system error occurred while creating a threads.
      */
     Executor(int thread_count, ExceptionHandler handler) :
@@ -49,7 +45,7 @@ public:
      */
     ~Executor();
 
-    // Copies are forbidden
+    // Executor is not copyable
     Executor(const Executor&) = delete;
     Executor& operator=(const Executor&) = delete;
     
@@ -61,8 +57,7 @@ public:
     /**
      * @brief Pushes new task to the executor.
      * @param task Task to be scheduled.
-     * 
-     * The function throws runtime_error if pushing to a halt executor,
+     * @throw The function throws runtime_error if pushing to a halt executor,
      * i.e. after executor destructor is triggered.
      */
     void push(std::function<void()> task);
@@ -94,6 +89,6 @@ private:
 
     ExceptionHandler exception_handler =
         [](const Executor&, std::function<void()>, const std::exception&) {
-            // Ignore exceptions by default
+            // Exceptions are ignored by default
         };
 };
