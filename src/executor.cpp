@@ -13,7 +13,7 @@ Executor::Executor(int thread_count)
 
     for (int i = 0; i < thread_count; ++i)
     {
-        workers.emplace_back([this, i] {
+        workers.emplace_back([this] {
             std::function<void()> task;
 
             while (true)
