@@ -19,7 +19,6 @@ TEST(ExecutorTest, CreateExecutorWithThreadCountArgument)
 
 TEST(ExecutorTest, DestroyExecutorWhileTaskIsRunning)
 {
-
     std::atomic_bool is_terminating{false};
     std::atomic_bool is_compleated{false};
     std::atomic_bool is_execution_started{false};
@@ -51,7 +50,6 @@ TEST(ExecutorTest, DestroyExecutorWhileTaskIsRunning)
 
 TEST(ExecutorTest, PushTaskToHaltExecutor)
 {
-
     std::atomic_bool is_terminating{false};
     std::atomic_bool is_execution_started{false};
 
@@ -103,28 +101,28 @@ TEST(ExecutorTest, PushTaskWhichThrowsExceptionWithDefaultHandler)
 
 TEST(ExecutorTest, PushTaskWhichThrowsExceptionWithCustomHandler)
 {
-    std::string exception_text{"Random exception"};
+    std::string random_exception{"Random exception"};
 
-    bool exeption_is_caught = false;
+    bool exception_is_caught = false;
     {
         Executor executor(1,
                           [&](const Executor& ex, std::function<void()>,
                               const std::exception& e) {
-                              auto runtime_exeption =
+                              auto runtime_exception =
                                   dynamic_cast<const std::runtime_error*>(&e);
 
-                              EXPECT_NE(runtime_exeption, nullptr);
+                              EXPECT_NE(runtime_exception, nullptr);
 
                               EXPECT_STREQ(
-                                  exception_text.c_str(),
-                                  runtime_exeption->what());
+                                  random_exception.c_str(),
+                                  runtime_exception->what());
 
-                              exeption_is_caught = true;
+                              exception_is_caught = true;
                           });
-        executor.push([&] { throw std::runtime_error(exception_text); });
+        executor.push([&] { throw std::runtime_error(random_exception); });
     }
 
-    EXPECT_TRUE(exeption_is_caught);
+    EXPECT_TRUE(exception_is_caught);
 }
 
 int main(int argc, char* argv[])
