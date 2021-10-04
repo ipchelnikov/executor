@@ -6,16 +6,16 @@
 
 using namespace std::chrono_literals;
 
-int main()
+int main()  // NOLINT(bugprone-exception-escape)
 {
-    std::cout << "Welcom to the executor example.\n";
+    std::cout << "Welcome to the executor example.\n";
 
-    std::atomic_int tasks_left;
+    std::atomic_size_t tasks_left;
 
     {
         Executor executor; // Create executor with the default thread count
 
-        auto executor_count = executor.get_thead_count();
+        const auto executor_count = executor.get_thead_count();
 
         tasks_left = executor_count * 2;
 
@@ -25,11 +25,11 @@ int main()
         std::cout << "Running " << executor_count * 2
                   << " tasks on the executor.\n";
 
-        for (int i = 0; i < executor_count * 2; ++i)
+        for (size_t i = 0; i < executor_count * 2; ++i)
         {
             executor.push([&tasks_left] {
                 std::this_thread::sleep_for(100ms);
-                tasks_left--;
+                --tasks_left;
             });
         }
 
@@ -42,4 +42,6 @@ int main()
     {
         std::cout << "All tasks are successfully finished.\n";
     }
+
+    return 0;
 }

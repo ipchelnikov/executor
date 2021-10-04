@@ -16,7 +16,7 @@ add_dependencies(executor_test executor)
 
 target_include_directories(executor_test PUBLIC ${googletest_SOURCE_DIR}/googletest/include)
 target_include_directories(executor_test PUBLIC ../src)
-target_link_libraries(executor_test executor gtest gtest_main pthread)
+target_link_libraries(executor_test executor gtest gtest_main) # pthread
 
 #########################################
 # Make the test runnable with $ make check

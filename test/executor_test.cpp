@@ -6,21 +6,21 @@ using namespace std::chrono_literals;
 
 TEST(ExecutorTest, CreateExecutorWithoutArguments)
 {
-    Executor executor;
+    const Executor executor;
     EXPECT_EQ(executor.get_thead_count(), std::thread::hardware_concurrency());
 }
 
 TEST(ExecutorTest, CreateExecutorWithThreadCountArgument)
 {
-    auto thread_count = 10;
-    Executor executor(thread_count);
+    constexpr auto thread_count = 10;
+    const Executor executor(thread_count);
     EXPECT_EQ(executor.get_thead_count(), thread_count);
 }
 
 TEST(ExecutorTest, DestroyExecutorWhileTaskIsRunning)
 {
     std::atomic_bool is_terminating{false};
-    std::atomic_bool is_compleated{false};
+    std::atomic_bool is_completed{false};
     std::atomic_bool is_execution_started{false};
 
     std::thread th{
@@ -32,11 +32,11 @@ TEST(ExecutorTest, DestroyExecutorWhileTaskIsRunning)
                     is_execution_started = true;
                     std::this_thread::sleep_for(10ms);
                 }
-                is_compleated = true;
+                is_completed = true;
             });
-            EXPECT_FALSE(is_terminating); // No termination befor distructor
+            EXPECT_FALSE(is_terminating); // No termination before destructor
         }};
-    EXPECT_FALSE(is_compleated); // The function is running.
+    EXPECT_FALSE(is_completed); // The function is running.
 
     while (!is_execution_started)
     {
@@ -45,7 +45,7 @@ TEST(ExecutorTest, DestroyExecutorWhileTaskIsRunning)
     is_terminating = true; // Release the function.
     th.join();
 
-    EXPECT_TRUE(is_compleated); // The function is completed.
+    EXPECT_TRUE(is_completed); // The function is completed.
 }
 
 TEST(ExecutorTest, PushTaskToHaltExecutor)
@@ -74,18 +74,18 @@ TEST(ExecutorTest, PushTaskToHaltExecutor)
         std::this_thread::sleep_for(2ms);
     }
 
-    bool exception_is_trown = false;
+    bool exception_is_thrown = false;
     try
     {
         executor->push([] {});
     }
-    catch (std::runtime_error e)
+    catch (std::runtime_error &e)
     {
-        exception_is_trown = true;
+        exception_is_thrown = true;
         EXPECT_STREQ(e.what(), "Executor is halt");
     }
 
-    EXPECT_TRUE(exception_is_trown);
+    EXPECT_TRUE(exception_is_thrown);
 
     is_terminating = true;
     th.join();
@@ -101,14 +101,14 @@ TEST(ExecutorTest, PushTaskWhichThrowsExceptionWithDefaultHandler)
 
 TEST(ExecutorTest, PushTaskWhichThrowsExceptionWithCustomHandler)
 {
-    std::string random_exception{"Random exception"};
+    const std::string random_exception{"Random exception"};
 
     bool exception_is_caught = false;
     {
         Executor executor(1,
                           [&](const Executor& ex, std::function<void()>,
                               const std::exception& e) {
-                              auto runtime_exception =
+                              const auto runtime_exception =
                                   dynamic_cast<const std::runtime_error*>(&e);
 
                               EXPECT_NE(runtime_exception, nullptr);

@@ -1,6 +1,6 @@
 #include "executor.h"
 
-Executor::Executor(int thread_count)
+Executor::Executor(unsigned int thread_count)
 {
     if (!thread_count)
     {
@@ -11,7 +11,7 @@ Executor::Executor(int thread_count)
         throw std::runtime_error("Cannot determine thread count.");
     }
 
-    for (int i = 0; i < thread_count; ++i)
+    for (unsigned int i = 0; i < thread_count; ++i)
     {
         workers.emplace_back([this] {
             std::function<void()> task;
@@ -72,7 +72,7 @@ void Executor::push(std::function<void()> task)
             throw(std::runtime_error("Executor is halt"));
         }
 
-        task_queue.emplace(task);
+        task_queue.emplace(std::move(task));
     }
     condition.notify_one();
 }
